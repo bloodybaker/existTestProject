@@ -1,18 +1,21 @@
 package general;
 
-import exceptions.PropertyException;
+import core.driver.*;
+import core.driver.browsers.ChromeDriver;
+import core.driver.browsers.EdgeDriver;
+import core.driver.browsers.OperaDriver;
+import core.driver.browsers.SafariDriver;
+import core.exceptions.PropertyException;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.WebDriver;
-import util.driver.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Hook {
-    protected WebDriver webDriver;
     private static final Map<String, WebDriverAction> drivers = new HashMap<String, WebDriverAction>() {{
         put("chrome", new ChromeDriver());
         put("edge", new EdgeDriver());
@@ -23,16 +26,12 @@ public class Hook {
     @BeforeAll
     public static void setupDriver() throws PropertyException {
         verifyAndGetBrowser().setup();
+        SingleDriver.setWebDriver(verifyAndGetBrowser().create());
     }
 
-    @BeforeEach
-    public void setupTest() throws PropertyException {
-        webDriver = verifyAndGetBrowser().create();
-    }
-
-    @AfterEach
-    public void tearDown(){
-        webDriver.quit();
+    @AfterAll
+    static void tearDown(){
+        SingleDriver.webDriver().quit();
     }
 
     private static WebDriverManager verifyAndGetBrowser() throws PropertyException {
