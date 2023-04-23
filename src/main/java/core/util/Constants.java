@@ -8,6 +8,6 @@ public class Constants {
             "https://exist.ua/uk/bosch-brand/filtr-masljanyj-0-986-452-044-1923945/",
             "https://exist.ua/uk/fram-brand/filtr-masljanyj-ph2857a-11900067/"
     };
-
     public static final String PRICE_REGEX = "\\d+(\\.\\d+)?";
+    public static final String LOG4J_PROPERTY_PATH = "log4j.properties";
 }
