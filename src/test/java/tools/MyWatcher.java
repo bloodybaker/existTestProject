@@ -1,13 +1,9 @@
 package tools;
 
-import core.driver.SingleDriver;
 import core.util.FileUtil;
-import io.qameta.allure.Attachment;
 import org.apache.log4j.Logger;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 
 public class MyWatcher implements TestWatcher {
     private static final Logger LOGGER = Logger.getLogger(MyWatcher.class.getSimpleName());
