@@ -1,29 +1,31 @@
 package tools;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.google.common.collect.ImmutableMap;
 import core.driver.SingleDriver;
 import core.driver.WebDriverAction;
 import core.driver.browsers.ChromeDriver;
 import core.driver.browsers.EdgeDriver;
 import core.driver.browsers.OperaDriver;
 import core.driver.browsers.SafariDriver;
-import core.exceptions.PropertyException;
 
+import core.exceptions.PropertyException;
 import core.util.Constants;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-import io.qameta.allure.Attachment;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.TestWatcher;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
+
+import static com.github.automatedowl.tools.AllureEnvironmentWriter.allureEnvironmentWriter;
 
 public class Hook {
     private static final Logger LOGGER = Logger.getLogger(Hook.class.getSimpleName());
@@ -40,7 +42,7 @@ public class Hook {
         LOGGER.info("Starting tuning browser...");
         WebDriverManager webDriverManager = verifyAndGetBrowser();
         webDriverManager.setup();
-        SingleDriver.setWebDriver(webDriverManager.create());
+        configureAllureEnv(webDriverManager.create());
         LOGGER.info("Browser was initialized successfully");
     }
 
@@ -56,7 +58,18 @@ public class Hook {
             return drivers.get(browserName).getInstance();
         } else {
             LOGGER.warn("As a default was selected Chrome", new PropertyException("Browser was not defined. Set up this property in environment variables."));
-            return drivers.get("chrome").getInstance();
+            return drivers.get("edge").getInstance();
         }
+    }
+
+    private static void configureAllureEnv(WebDriver webDriver){
+        SingleDriver.setWebDriver(webDriver);
+        Capabilities caps = ((RemoteWebDriver) webDriver).getCapabilities();
+        allureEnvironmentWriter(
+                ImmutableMap.<String, String>builder()
+                        .put("Browser", caps.getBrowserName())
+                        .put("Browser.Version", caps.getBrowserVersion())
+                        .put("LatestRun.Date",  new SimpleDateFormat(Constants.dateFormat).format(new Date()))
+                        .build(), System.getProperty("user.dir").concat("target/allure-results/"));
     }
 }

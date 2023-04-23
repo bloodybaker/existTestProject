@@ -1,6 +1,7 @@
 package tools;
 
 import core.driver.SingleDriver;
+import core.util.FileUtil;
 import io.qameta.allure.Attachment;
 import org.apache.log4j.Logger;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -14,17 +15,12 @@ public class MyWatcher implements TestWatcher {
     @Override
     public void testSuccessful(ExtensionContext context) {
         LOGGER.info("Taking screenshot on SUCCESSFULLY completed case");
-        captureScreen();
+        FileUtil.getScreenshot();
     }
 
     @Override
     public void testFailed(ExtensionContext context, Throwable cause) {
         LOGGER.info("Taking screenshot on FAILED case", cause);
-        captureScreen();
-    }
-
-    @Attachment(value = "Page screenshot", type = "image/png")
-    private byte[] captureScreen() {
-        return ((TakesScreenshot) SingleDriver.webDriver()).getScreenshotAs(OutputType.BYTES);
+        FileUtil.getScreenshot();
     }
 }
