@@ -5,14 +5,17 @@ import core.util.Constants;
 import io.qameta.allure.Flaky;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import pages.CartPage;
 import pages.ProductPage;
 import tools.Hook;
+import tools.MyWatcher;
 
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(MyWatcher.class)
 public class CartTest extends Hook {
 
     @Test

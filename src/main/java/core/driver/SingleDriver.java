@@ -7,10 +7,11 @@ import java.util.Objects;
 
 public final class SingleDriver {
     private static WebDriver webDriver;
-    private final static Logger LOGGER = Logger.getLogger("Driver");
+    private final static Logger LOGGER = Logger.getLogger(SingleDriver.class.getSimpleName());
 
     public static void setWebDriver(WebDriver webDriver) {
         SingleDriver.webDriver = webDriver;
+        webDriver.manage().window().maximize();
     }
 
     public static void open(String url){

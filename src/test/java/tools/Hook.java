@@ -1,5 +1,7 @@
 package tools;
 
+import java.util.*;
+
 import core.driver.SingleDriver;
 import core.driver.WebDriverAction;
 import core.driver.browsers.ChromeDriver;
@@ -23,11 +25,8 @@ import org.junit.jupiter.api.extension.TestWatcher;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class Hook implements TestWatcher {
-    private static Logger LOGGER = Logger.getLogger(Hook.class.getSimpleName());
+public class Hook {
+    private static final Logger LOGGER = Logger.getLogger(Hook.class.getSimpleName());
     private static final Map<String, WebDriverAction> drivers = new HashMap<String, WebDriverAction>() {{
         put("chrome", new ChromeDriver());
         put("edge", new EdgeDriver());
@@ -39,13 +38,14 @@ public class Hook implements TestWatcher {
     public static void setupDriver() {
         PropertyConfigurator.configure(Constants.LOG4J_PROPERTY_PATH);
         LOGGER.info("Starting tuning browser...");
-        verifyAndGetBrowser().setup();
-        SingleDriver.setWebDriver(verifyAndGetBrowser().create());
+        WebDriverManager webDriverManager = verifyAndGetBrowser();
+        webDriverManager.setup();
+        SingleDriver.setWebDriver(webDriverManager.create());
         LOGGER.info("Browser was initialized successfully");
     }
 
     @AfterAll
-    static void tearDown(){
+    public static void tearDown() {
         LOGGER.info("Ending tests");
         SingleDriver.webDriver().quit();
     }
@@ -58,20 +58,5 @@ public class Hook implements TestWatcher {
             LOGGER.warn("As a default was selected Chrome", new PropertyException("Browser was not defined. Set up this property in environment variables."));
             return drivers.get("chrome").getInstance();
         }
-    }
-
-    @Override
-    public void testSuccessful(ExtensionContext context) {
-        captureScreen();
-    }
-
-    @Override
-    public void testFailed(ExtensionContext context, Throwable cause) {
-        captureScreen();
-    }
-
-    @Attachment(value = "Page screenshot", type = "image/png")
-    private byte[] captureScreen() {
-        return ((TakesScreenshot) SingleDriver.webDriver()).getScreenshotAs(OutputType.BYTES);
     }
 }

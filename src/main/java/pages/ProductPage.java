@@ -5,7 +5,7 @@ import org.openqa.selenium.By;
 import core.util.BuilderXpath;
 
 public class ProductPage extends PageTool {
-    private final String productInfoBlockPath = "//div[starts-with(@class,'ProductOrderInfostyle')]//div[@data-testid='ProductPrice']";
+    private static final String productInfoBlockPath = "//div[starts-with(@class,'ProductOrderInfostyle')]//div[@data-testid='ProductPrice']";
 
     private final By productTitle = By.xpath("//h1");
     private final By priceLabel = BuilderXpath.concat(productInfoBlockPath, "/*[starts-with(@class,'ProductPrice')]");
