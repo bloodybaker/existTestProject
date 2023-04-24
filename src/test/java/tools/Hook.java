@@ -3,7 +3,6 @@ package tools;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import com.google.common.collect.ImmutableMap;
 import core.driver.SingleDriver;
 import core.driver.WebDriverAction;
 import core.driver.browsers.ChromeDriver;
@@ -11,9 +10,12 @@ import core.driver.browsers.EdgeDriver;
 import core.driver.browsers.OperaDriver;
 import core.driver.browsers.SafariDriver;
 
+import core.dto.EnvironmentDto;
+import core.dto.PropertyDto;
 import core.exceptions.PropertyException;
 import core.util.Constants;
 
+import core.util.FileUtil;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 import org.apache.log4j.Logger;
@@ -25,11 +27,9 @@ import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-import static com.github.automatedowl.tools.AllureEnvironmentWriter.allureEnvironmentWriter;
-
 public class Hook {
     private static final Logger LOGGER = Logger.getLogger(Hook.class.getSimpleName());
-    private static final Map<String, WebDriverAction> drivers = new HashMap<String, WebDriverAction>() {{
+    private static final Map<String, WebDriverAction> drivers = new HashMap<>() {{
         put("chrome", new ChromeDriver());
         put("edge", new EdgeDriver());
         put("opera", new OperaDriver());
@@ -65,11 +65,11 @@ public class Hook {
     private static void configureAllureEnv(WebDriver webDriver){
         SingleDriver.setWebDriver(webDriver);
         Capabilities caps = ((RemoteWebDriver) webDriver).getCapabilities();
-        allureEnvironmentWriter(
-                ImmutableMap.<String, String>builder()
-                        .put("Browser", caps.getBrowserName())
-                        .put("Browser.Version", caps.getBrowserVersion())
-                        .put("LatestRun.Date",  new SimpleDateFormat(Constants.dateFormat).format(new Date()))
-                        .build(), System.getProperty("user.dir").concat("target/allure-results/"));
+        List<PropertyDto> properties = new ArrayList<>(){{
+            add(new PropertyDto("Browser", caps.getBrowserName()));
+            add(new PropertyDto("Browser.Version", caps.getBrowserVersion()));
+            add(new PropertyDto("LatestRun.Date",  new SimpleDateFormat(Constants.DATE_FORMAT).format(new Date())));
+        }};
+        FileUtil.createXmlEnvFile(new EnvironmentDto(properties));
     }
 }

@@ -21,8 +21,7 @@
 - [x] Додані тести
 - [x] Інтегрований репорт Allure
 - [x] Розмежено фунціонал
-- [ ] Додавання environment.xml для відображення в Allure репорті
-- [ ] Накладання ліцензії
+- [x] Додавання environment.xml для відображення в Allure репорті
 
 У випадку чогось звертатися за додатковими запитаннями:   
 <a href="https://t.me/opcoder"><img src="https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white" target=”_blank”/></a>
