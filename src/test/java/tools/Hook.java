@@ -42,19 +42,20 @@ public class Hook {
         LOGGER.info("Starting tuning browser...");
         WebDriverManager webDriverManager = verifyAndGetBrowser();
         webDriverManager.setup();
-        configureAllureEnv(webDriverManager.create());
+        SingleDriver.setWebDriver(webDriverManager.create());
         LOGGER.info("Browser was initialized successfully");
     }
 
     @AfterAll
     public static void tearDown() {
         LOGGER.info("Ending tests");
+        configureAllureEnv(SingleDriver.webDriver());
         SingleDriver.webDriver().quit();
     }
 
     private static WebDriverManager verifyAndGetBrowser() {
-        String browserName = System.getenv("browser");
-        if (browserName != null && drivers.containsKey(browserName)) {
+        String browserName = System.getProperty("browser");
+        if (browserName != null && drivers.containsKey(browserName.toLowerCase(Locale.ROOT))) {
             return drivers.get(browserName).getInstance();
         } else {
             LOGGER.warn("As a default was selected Chrome", new PropertyException("Browser was not defined. Set up this property in environment variables."));

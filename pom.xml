@@ -89,6 +89,10 @@
                         <junit.jupiter.execution.parallel.config.strategy>dynamic
                         </junit.jupiter.execution.parallel.config.strategy>
                     </systemPropertyVariables>
+                    <environmentVariables>
+                        <forkMode>always</forkMode>
+                        <browser>edge</browser>
+                    </environmentVariables>
                 </configuration>
                 <dependencies>
                     <dependency>

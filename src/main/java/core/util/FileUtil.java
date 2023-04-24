@@ -41,7 +41,7 @@ public class FileUtil {
             xmlOutputter.output(document, fileWriter);
             LOGGER.info("XML file created successfully!");
         } catch (IOException e) {
-            LOGGER.error("Can't create env file for allure", e.getCause());
+            LOGGER.error("Can't create env file for allure", e);
         }
     }
 }
